@@ -11,17 +11,27 @@ function Zk = MeasModel(Xk, ModelParams)
 SwitchModel = ModelParams.Meas;         % get the measurement model to use.
 ProblemDim  = ModelParams.PDim;         % problem dimension 2-D or 3-D cartesian
 NumOfMeas   = ModelParams.Nmeas;        % number of total measurements (scans)
+sigma_w     = ModelParams.sigma_w;      % measurement noise std
 
 switch SwitchModel
     case 'Linear'
         switch ProblemDim
             case 3
                 % measurement matrix
-                H = [eye(3); zeros(3,size(Xk)-3)];
+                switch size(x,1)
+                    case 9          % meaning CA motion model
+                        h = @(x) [x(1,:); x(4,:); x(7,:)];
+                    case 6          % meaning CV motion model
+                        h = @(x) [x(1,:); x(3,:); x(5,:)];
+                end
             case 2
-                H = [eye(2); zeros(2,size(Xk)-2)];
-        end
-        h = @(x) H*x;
+                switch size(x,1)
+                    case 6          % CA motion
+                        h = @(x) [x(1,:); x(4,:)];
+                    case 4          % CV motion
+                        h = @(x) [x(1,:); x(3,:)];
+                end
+         end
         z = h(Xk);        % transformed measurements
         Zk = z + sigma_w*randn(size(z,1), NumOfMeas);
     case 'Bearings'
@@ -30,7 +40,7 @@ switch SwitchModel
                 %% Do be defined...
             case 2
                 % four-quadrant inverse tangent, Zk in (-pi,pi)
-                h = @(x) atan2(x(1,:),x(2,:));
+                h = @(x) atan2(x(1,:),x(3,:));
         end
         z = h(Xk);        % transformed measurements
         Zk = z + sigma_w*randn(size(z,1), NumOfMeas);

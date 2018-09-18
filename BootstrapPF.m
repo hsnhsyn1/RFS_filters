@@ -13,7 +13,6 @@ clc; clear all; close all;
 
 % function x_ki = BootstrapPF(xk_prev, zk, PFparams)
 
-N = 20;% PFparams.N;
 
 
 
