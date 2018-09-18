@@ -31,8 +31,9 @@ switch SwitchModel
                         x(4,:) ];
                 %%  if the sensor platform moves
                 if ModelParams.IsMoving
-                    X = X - ModelParams.S;
+                    X = X - ModelParams.S(xOk, xOk_1);
                 end
+                
         end
     case 'CA'
         switch ProblemDim
@@ -76,14 +77,17 @@ switch SwitchModel
             X(2,:) = cos_omega_T.*x(2,:) - sin_omega_T.*x(4,:);
             X(4,:) = sin_omega_T.*x(2,:) + cos_omega_T.*x(4,:);
             X(5,:) = x(5,:);
+%             f = @(x) [  x(1,:) + a.*x(2,:) - b.*x(4,:); ...
+%                         cos_omega_T.*x(2,:) - sin_omega_T.*x(4,:); ...
+%                         x(3,:) + b.*x(2,:) + a.*x(4,:); ...
+%                         sin_omega_T.*x(2,:) + cos_omega_T.*x(4,:); ...
+%                         x(5,:) ];
         end
 end
 
-%   B identity matrix
-%   B2:
+
 if IsNoisy
-    Vk = ModelParams.B*randn(size(X,1),size(X,2));
-    Xnew = X + ModelParams.B2*Vk;       % process noise with scale
+    Xnew = X + ModelParams.sigma_v*randn(size(X));       % process noise with scale
 else
     Xnew = X;
 end

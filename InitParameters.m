@@ -7,6 +7,7 @@ function model = InitParameters
 
 model.dT        = 30;           % sampling interval (can be changed for asynchronous case)
 model.K         = 60;           % number of scans
+model.Nmeas     = 1;            % number of measurements in a scan
 model.Motion    = 'CV';         % motion model 'CT','CA','CV'
 model.Meas      = 'Bearings';   % measurement model 'Linear' or 'Bearings'
 model.xDim      = 4;            % state vector dimension is specified according to motion model
@@ -15,7 +16,8 @@ model.xDim      = 4;            % state vector dimension is specified according 
 model.zDim      = 1;            % measurement vector dimension is specified according to the measurement model.
                                 % 1: Bearings, 2: 2-D, 3: 3-D problems
 model.PDim      = 2;            % problem dimension: 2-D or 3-D
-
+model.vDim      = model.xDim;   % process noise vector size
+model.wDim      = model.zDim;   % measurement noise vector size
 
 %%  Noise parameters
 model.sigma_w   = 1*pi/180;     % measurement noise (in rad)
@@ -47,7 +49,7 @@ model.Lambda    = 5;            % average clutter (will be varied)
 model.pD        = 0.9;          % probability of detection (will be varied)
 
 %%  Sensor control parameters
-model.IsMoving = true;          % is the sensor moving? (i.e. Bearings-Only)
+model.IsMoving = false;          % is the sensor moving? (i.e. Bearings-Only)
 %   S: deterministic matrix for observer accelerations for 2-D CV motion.
 model.S = @(xOk, xOk_1) [   xOk(1) - xOk_1(1) - model.dT*xOk_1(2); ...
                             xOk(2) - xOk_1(2);

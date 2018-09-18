@@ -9,11 +9,15 @@
 %%  Output:
 %           * particles of the new cycle (x_ki).
 
-clc; clear all; close all;
+clc; clearvars; close all;
+model = InitParameters;
+x0 = 3*randn(model.xDim,model.N);               % initial particles
+xk_prev = x0;                                   % initial
+% function x_ki = BootstrapPF(xk_prev, zk, model)
 
-% function x_ki = BootstrapPF(xk_prev, zk, PFparams)
-
-
+Ns      = size(xk_prev,2);                              % number of particles
+xki     = MarkovTransition(xk_prev, model, true);       % predicted particles
+z_pred  = MeasModel(xki, model, false);                 % predicted measurements
 
 
 

@@ -6,12 +6,13 @@
 %           * bearings measurements,
 %           * cartesian measurements
 
-function Zk = MeasModel(Xk, ModelParams)
+function Zk = MeasModel(Xk, ModelParams, IsNoisy)
 
 SwitchModel = ModelParams.Meas;         % get the measurement model to use.
 ProblemDim  = ModelParams.PDim;         % problem dimension 2-D or 3-D cartesian
 NumOfMeas   = ModelParams.Nmeas;        % number of total measurements (scans)
 sigma_w     = ModelParams.sigma_w;      % measurement noise std
+wDim        = ModelParams.wDim;         % measurement noise dimension
 
 switch SwitchModel
     case 'Linear'
@@ -33,7 +34,11 @@ switch SwitchModel
                 end
          end
         z = h(Xk);        % transformed measurements
-        Zk = z + sigma_w*randn(size(z,1), NumOfMeas);
+        if IsNoisy
+            Zk = z + sigma_w*randn(wDim, NumOfMeas);
+        else
+            Zk = z;
+        end
     case 'Bearings'
         switch ProblemDim
             case 3
@@ -43,9 +48,13 @@ switch SwitchModel
                 h = @(x) atan2(x(1,:),x(3,:));
         end
         z = h(Xk);        % transformed measurements
-        Zk = z + sigma_w*randn(size(z,1), NumOfMeas);
+        if IsNoisy
+            Zk = z + sigma_w*randn(wDim, NumOfMeas);
+        else
+            Zk = z;
+        end
         %% ------------------------
-        % review
+        % revise...
         if Zk <= -pi
             Zk = 2*pi + Zk;
         elseif Zk > pi
