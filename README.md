@@ -10,3 +10,5 @@ Measurement models available:
   * linear        : 2-D and 3-D, for CA and CV motion models.
   * nonlinear     : bearings-only (2-D only, for now).
 
+Bootstrap particle filter available (not tested)
+  * uniform resampling procedure (SIS). 
