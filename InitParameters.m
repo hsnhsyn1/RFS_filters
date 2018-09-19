@@ -5,6 +5,8 @@
 
 function model = InitParameters
 
+model.Concept   = 'single';     % filtering concept: 'single', 'Ber', 'MeMBer', 'PHD', ...
+                                % 'CPHD', 'CBMeMBer', 'LMB', 'GLMB'
 model.dT        = 30;           % sampling interval (can be changed for asynchronous case)
 model.K         = 60;           % number of scans
 model.Nmeas     = 1;            % number of measurements in a scan
