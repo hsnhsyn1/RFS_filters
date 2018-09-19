@@ -6,7 +6,7 @@
 %           * bearings measurements,
 %           * cartesian measurements
 
-function Zk = MeasModel(Xk, ModelParams, IsNoisy)
+function Zk = MeasFcn(Xk, ModelParams, IsNoisy)
 
 SwitchModel = ModelParams.Meas;         % get the measurement model to use.
 ProblemDim  = ModelParams.PDim;         % problem dimension 2-D or 3-D cartesian
