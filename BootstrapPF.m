@@ -10,12 +10,13 @@
 %           * particles of the new cycle (xk_new).
 %           * new particle weights (wk_new).
 
-% clc; clearvars; close all;
-% model = InitParameters;
-% x0 = 3*randn(model.xDim,model.N);               % initial particles
-% xk_prev = x0;                                   % initial
+clc; clearvars; close all;
+model = InitParameters;
+x0 = 3*randn(model.xDim,model.N);               % initial particles
+xk_prev = x0;                                   % initial
+zk = 3;
 
-function [xk_new, wk_new] = BootstrapPF(xk_prev, zk, model)
+% function [xk_new, wk_new] = BootstrapPF(xk_prev, zk, model)
 
 Ns      = size(xk_prev,2);                              % number of particles
 xki     = MarkovTransition(xk_prev, model, true);       % predicted particles
@@ -24,9 +25,9 @@ wki     = computeLikelihood(zk, z_pred, model);         % likelihood value as th
 wk_pred = wki/sum(wki);                                 % normalized weights
 
 %% resampling (should be another function)- implement alternative resampling strategies
-idx = randsample(length(wk_pred), Ns,true, wk_pred);    % uniform resampling w.r.t. normalized weights.
-xk_new  = xki(idx);                                     % updated particles
+idx = randsample(length(wk_pred), Ns, true, wk_pred);    % uniform resampling w.r.t. normalized weights.
+xk_new  = xki(:,idx);                                     % updated particles
 wk_new  = ones(1,Ns)/Ns;                                % new particles (uniform)
 
 
-end
+% end
