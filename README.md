@@ -12,3 +12,9 @@ Measurement models available:
 
 Bootstrap particle filter available (not tested)
   * uniform resampling procedure (SIS). 
+
+To be added:
+  * sensor control function (as a control input to the dynamic system model).
+  * adaptation to the Bernoulli (after that Multi Bernoulli) filter concept.
+  * some evolutionary approach for the resampling procedure.
+  * data generation module.
