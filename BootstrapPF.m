@@ -19,15 +19,13 @@ zk = 3;
 % function [xk_new, wk_new] = BootstrapPF(xk_prev, zk, model)
 
 Ns      = size(xk_prev,2);                              % number of particles
-xki     = MarkovTransition(xk_prev, model, true);       % predicted particles
-z_pred  = MeasFcn(xki, model, false);                   % predicted measurements
-wki     = computeLikelihood(zk, z_pred, model);         % likelihood value as the predicted weight
-wk_pred = wki/sum(wki);                                 % normalized weights
+Xki     = SampleParticles(xk_prev, model, qk);          % predicted particles
+Wki     = SampleWeights(xki, zk, model);                % predicted weights
+wk_pred = Wki/sum(wki);                                 % normalized weights
 
 %% resampling (should be another function)- implement alternative resampling strategies
-idx = randsample(length(wk_pred), Ns, true, wk_pred);    % uniform resampling w.r.t. normalized weights.
-xk_new  = xki(:,idx);                                     % updated particles
-wk_new  = ones(1,Ns)/Ns;                                % new particles (uniform)
+xk_new = Resampling(Xki, wk_pred, model);               % updated particles
+wk_new = ones(1,Ns)/Ns;                                 % new particles (uniform)
 
 
 % end

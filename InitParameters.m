@@ -20,6 +20,9 @@ model.zDim      = 1;            % measurement vector dimension is specified acco
 model.PDim      = 2;            % problem dimension: 2-D or 3-D
 model.vDim      = model.xDim;   % process noise vector size
 model.wDim      = model.zDim;   % measurement noise vector size
+model.Sampling  = 'bootstrap';  % 'bootstrap' uses transitional pdf (Markov transition)
+model.Resampling = 'standard';
+
 
 %%  Noise parameters
 model.sigma_w   = diag([1*pi/180]);                 % measurement noise std (in rad)
