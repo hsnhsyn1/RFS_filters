@@ -6,3 +6,8 @@ clc; clearvars; close all;
 
 model = InitParameters;         % initialize all parameters.
 
+x0 = 3*randn(model.xDim,model.N);               % initial particles
+xk_prev = x0;                                   % initial
+zk = 3;
+
+[xk_new, wk_new] = BootstrapPF(xk_prev, zk, model);

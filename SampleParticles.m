@@ -4,12 +4,12 @@
 
 %%  Inputs:
 %           xk_1    : current particles (from the previous cycle)
-%           qk      : proposal distribution to sample from (if any)
+%           qk      : proposal distribution to sample from in the model
 %           model   : parameters (if necessary), specifying sampling
 %                       strategy
 
 
-function Xki = SampleParticles(xk_1, model, qk)
+function Xki = SampleParticles(xk_1, model)
 
 switch model.Sampling
     case 'bootstrap'
