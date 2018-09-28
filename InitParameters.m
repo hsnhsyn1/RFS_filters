@@ -8,7 +8,7 @@ function model = InitParameters
 model.Concept   = 'single';     % filtering concept: 'single', 'Ber', 'MeMBer', 'PHD', ...
                                 % 'CPHD', 'CBMeMBer', 'LMB', 'GLMB'
 model.dT        = 30;           % sampling interval (can be changed for asynchronous case)
-model.K         = 60;           % number of scans
+model.K         = 75;           % number of scans
 model.Nmeas     = 1;            % number of measurements in a scan
 model.Motion    = 'CV';         % motion model 'CT','CA','CV'
 model.Meas      = 'Bearings';   % measurement model 'Linear' or 'Bearings'
@@ -41,6 +41,7 @@ model.B2        = [kron([eye(2), zeros(2,1)],model.bt); 0 0 model.w_std*model.dT
 model.N         = 5000;         % number of particles
 
 %%  Bernoulli (RFS) parameters
+%   parameterized as state dependent. (from Vo)
 model.ps = 0.98;                % probability of survival of a track to the next scan
 model.pb = 0.01;                % birth probability
 
@@ -51,12 +52,13 @@ model.TPM       = [(1-model.pb) model.pb; (1-model.ps) model.ps];
 model.q0        = 1;            % initial target existence probability
 
 %%  Clutter parameters
-model.cz        = (2*pi)^(-1);  % clutter spatial distribution is uniform
-model.Lambda    = 5;            % average clutter (will be varied)
-model.pD        = 0.9;          % probability of detection (will be varied)
+model.range_cz  = [-pi, pi];    % clutter range
+model.pdf_cz    = 1/prod(model.range_cz(:,2) - model.range_cz(:,1)); % clutter spatial distribution is uniform
+model.Lambda    = 0;            % average clutter (will be varied)
+model.pD        = 0.9;          % probability of detection (will be varied)-state dependent parameterization
 
 %%  Sensor control parameters
-model.IsMoving = false;          % is the sensor moving? (i.e. Bearings-Only)
+model.IsMoving = false;         % is the sensor moving? (i.e. Bearings-Only)
 %   S: deterministic matrix for observer accelerations for 2-D CV motion.
 model.S = @(xOk, xOk_1) [   xOk(1) - xOk_1(1) - model.dT*xOk_1(2); ...
                             xOk(2) - xOk_1(2);
