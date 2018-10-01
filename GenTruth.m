@@ -28,6 +28,7 @@ for k = 1:K
     if k < K/2
         ownstate = MarkovTransition(ownstate, model, false);        % noiseless state transition
     else
+        % bodoslama leg üretimi...
         ownstate = MarkovTransition([ownstate(1); 2.57*sin(20*pi/180); ownstate(3); 2.57*cos(20*pi/180)],...
                                         model, false);
     end

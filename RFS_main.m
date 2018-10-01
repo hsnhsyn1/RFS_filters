@@ -13,6 +13,9 @@ zk = 3;
 GTruth = GenTruth(model);
 Measures = GenMeas(GTruth, model);
 
+
+%% -----------------------------------------
+%%%%%       function tests
 a = [GTruth.X{:}];
 figure, plot(a(1,:), a(3,:),'.r'), hold on
 plot(GTruth.Ownship(1,:),GTruth.Ownship(3,:),'.b')
