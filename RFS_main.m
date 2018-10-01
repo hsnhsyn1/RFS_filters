@@ -4,14 +4,37 @@
 
 clc; clearvars; close all;
 
-model = InitParameters;         % initialize all parameters.
+model = InitParameters;                 % initialize all parameters.
+GTruth = GenTruth(model);               % generate ground truth target and observer trajectory
+% Measures = GenMeas(GTruth, model);      % offline data generation
 
-x0 = 3*randn(model.xDim,model.N);               % initial particles
-xk_prev = x0;                                   % initial
-zk = 3;
+% initial target state
+Xo_k   = [0; 2.57*sin(140*pi/180); 0; 2.57*cos(140*pi/180)];       % 5 knots, 140 deg
+GTruth.Ownship(:,1) = Xo_k;                 % initial observer state
+xinit   = [500; 3; 400; 4];                 % initial target state
+ChangeCourse = false;
 
-GTruth = GenTruth(model);
-Measures = GenMeas(GTruth, model);
+Measures.Z = cell(model.K,1); % initialize measurement structure
+Measures.Z{1} = MeasFcn(xinit-Xo_k, model, true);     % first measurement
+
+%%  main filtering loop
+for k = 2:model.K
+    if k >= model.K/2
+        ChangeCourse = true;
+    end
+    %% sensor motion control procedure
+    if model.OwnControl
+        if ~ChangeCourse
+            Ucontrol = [140, 2.57];
+        else
+            Ucontrol = [20, 2.57];
+        end
+        Xo_k = OnlineOwnship(Xo_k, Ucontrol, model);
+        GTruth.Ownship(:,k) = Xo_k;                     % save the trajectory
+    end
+    Measures = GenMeas(GTruth, model, Measures, k);     % online data generation
+    
+end
 
 
 %% -----------------------------------------

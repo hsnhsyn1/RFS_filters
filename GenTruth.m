@@ -20,21 +20,24 @@ GTruth.Ownship      = zeros(model.xDim, K); % ownship trajectory
 %%  target initial state(s)
 xinit = cat(2,[8000; 3.6*sin(-130*pi/180); 0; 3.6*cos(-130*pi/180)]);
 
-%%  observer initial state
-oinit = [0; 2.57*sin(140*pi/180); 0; 2.57*cos(140*pi/180)];       % 5 knots, 140 deg
-% obsvelsec = []
-ownstate = oinit;
-for k = 1:K
-    if k < K/2
-        ownstate = MarkovTransition(ownstate, model, false);        % noiseless state transition
-    else
-        % bodoslama leg üretimi...
-        ownstate = MarkovTransition([ownstate(1); 2.57*sin(20*pi/180); ownstate(3); 2.57*cos(20*pi/180)],...
-                                        model, false);
-    end
-        GTruth.Ownship(:,k) = ownstate;
-end
+%   if ownship motion control is not present, then generate the observer
+%   trajectory as batch.
+if ~model.OwnControl
+    %%  observer initial state
+    oinit = [0; 2.57*sin(140*pi/180); 0; 2.57*cos(140*pi/180)];       % 5 knots, 140 deg
 
+    ownstate = oinit;
+    for k = 1:K
+        if k < K/2
+            ownstate = MarkovTransition(ownstate, model, false);        % noiseless state transition
+        else
+            % bodoslama leg üretimi...
+            ownstate = MarkovTransition([ownstate(1); 2.57*sin(20*pi/180); ownstate(3); 2.57*cos(20*pi/180)],...
+                                            model, false);
+        end
+            GTruth.Ownship(:,k) = ownstate;
+    end
+end
 %   birth and death times of each target
 nbirths     = 1;       % number of total targets
 tbirth(:)   = 5;       % birth times of each target

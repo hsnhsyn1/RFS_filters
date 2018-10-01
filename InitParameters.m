@@ -50,6 +50,7 @@ model.pb = 0.01;                % birth probability
 % appearance eps_k whic is in {0, 1} referred to as the target existence.
 model.TPM       = [(1-model.pb) model.pb; (1-model.ps) model.ps];
 model.q0        = 1;            % initial target existence probability
+model.MaxRange  = 30e3;
 
 %%  Clutter parameters
 model.range_cz  = [-pi, pi];    % clutter range
@@ -58,7 +59,8 @@ model.Lambda    = 0;            % average clutter (will be varied)
 model.pD        = 0.9;          % probability of detection (will be varied)-state dependent parameterization
 
 %%  Sensor control parameters
-model.IsMoving = false;         % is the sensor moving? (i.e. Bearings-Only)
+model.OwnControl = false;       % is sensor control is present, for observer trajectory generation
+model.IsMoving   = false;       % is the sensor moving? (i.e. Bearings-Only)
 %   S: deterministic matrix for observer accelerations for 2-D CV motion.
 model.S = @(xOk, xOk_1) [   xOk(1) - xOk_1(1) - model.dT*xOk_1(2); ...
                             xOk(2) - xOk_1(2);

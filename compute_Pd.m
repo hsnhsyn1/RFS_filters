@@ -3,14 +3,14 @@
 %   used in measurement generation
 
 
-function Pd = compute_Pd(x, model)
+function Pd = compute_Pd(x, own, model)
 
 if isempty(x)
     Pd = [];
 else
     ps      = model.ps;
-    mid     = [0; 0];
-    Cov     = diag([2000, 2000].^2);        % related to some "max range or range noise" (?)
+    mid     = [own(1); own(3)];
+    Cov     = diag([model.MaxRange, model.MaxRange].^2);        % related to target range
     
     Nt = size(x,2);         % number of targets
     point = x([1 3],:);     % position components of target states
