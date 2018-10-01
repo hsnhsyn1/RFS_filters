@@ -8,7 +8,7 @@ function model = InitParameters
 model.Concept   = 'single';     % filtering concept: 'single', 'Ber', 'MeMBer', 'PHD', ...
                                 % 'CPHD', 'CBMeMBer', 'LMB', 'GLMB'
 model.dT        = 30;           % sampling interval (can be changed for asynchronous case)
-model.K         = 75;           % number of scans
+model.K         = 60;           % number of scans
 model.Nmeas     = 1;            % number of measurements in a scan
 model.Motion    = 'CV';         % motion model 'CT','CA','CV'
 model.Meas      = 'Bearings';   % measurement model 'Linear' or 'Bearings'
@@ -39,6 +39,7 @@ model.B2        = [kron([eye(2), zeros(2,1)],model.bt); 0 0 model.w_std*model.dT
 
 %%  Particle Filter parameters
 model.N         = 5000;         % number of particles
+model.B         = 1000;         % number of birth particles
 
 %%  Bernoulli (RFS) parameters
 %   parameterized as state dependent. (from Vo)

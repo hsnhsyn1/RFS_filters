@@ -40,8 +40,8 @@ if ~model.OwnControl
 end
 %   birth and death times of each target
 nbirths     = 1;       % number of total targets
-tbirth(:)   = 5;       % birth times of each target
-tdeath(:)   = K-10;    % death times of each target
+tbirth(:)   = 1;       % birth times of each target
+tdeath(:)   = K;    % death times of each target
 
 for tnum = 1:nbirths   % for each target
     targetstate = xinit(:,tnum);        % target initial state
