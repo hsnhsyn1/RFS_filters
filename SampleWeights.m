@@ -10,11 +10,9 @@
 
 function Wki = SampleWeights(xki, zk, model)
 
-z_pred  = MeasFcn(xki, model, false);           % predicted measurements, without noise
-
 switch model.Concept
     case 'single'
-        wki = computeLikelihood(zk, z_pred, model);	% likelihood value as the predicted weight
+        wki = computeLikelihood(zk, xki, model);	% likelihood value as the predicted weight
     case 'Ber'
 end
 

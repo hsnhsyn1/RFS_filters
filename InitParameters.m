@@ -46,22 +46,27 @@ model.B         = 1000;         % number of birth particles
 model.ps = 0.98;                % probability of survival of a track to the next scan
 model.pb = 0.01;                % birth probability
 
+%%  Birth/initialization parameters
+model.r_init    = 7.5e3;         % expected target range (meters)
+model.stdr      = 1.5e3;        % standard deviation of the range
+model.stds      = 3.5;          % standard deviation of velocity components (m/s)
+
 %%  Observation parameters
 % transitional probability matrix to model the dynamics of target
 % appearance eps_k whic is in {0, 1} referred to as the target existence.
 model.TPM       = [(1-model.pb) model.pb; (1-model.ps) model.ps];
-model.q0        = 1;            % initial target existence probability
-model.MaxRange  = 30e3;
+model.q0        = 0.99;            % initial target existence probability
+model.MaxRange  = 20e3;
 
 %%  Clutter parameters
 model.range_cz  = [-pi, pi];    % clutter range
 model.pdf_cz    = 1/prod(model.range_cz(:,2) - model.range_cz(:,1)); % clutter spatial distribution is uniform
-model.Lambda    = 0;            % average clutter (will be varied)
+model.Lambda    = 1;            % average clutter (will be varied)
 model.pD        = 0.9;          % probability of detection (will be varied)-state dependent parameterization
 
 %%  Sensor control parameters
 model.OwnControl = false;       % is sensor control is present, for observer trajectory generation
-model.IsMoving   = false;       % is the sensor moving? (i.e. Bearings-Only)
+model.IsMoving   = true;       % is the sensor moving? (i.e. Bearings-Only)
 %   S: deterministic matrix for observer accelerations for 2-D CV motion.
 model.S = @(xOk, xOk_1) [   xOk(1) - xOk_1(1) - model.dT*xOk_1(2); ...
                             xOk(2) - xOk_1(2);

@@ -13,8 +13,8 @@ switch nargin
     case 4
         % if any target is present
         if gt.N(k) > 0
-            Pd = compute_Pd(gt.X{k}, gt.Ownship(:,k), model);
-            %         Pd = model.pD;
+%             Pd = compute_Pd(gt.X{k}, gt.Ownship(:,k), model);
+            Pd = model.pD;
             idx = find(rand(gt.N(k),1) <= Pd );         % if a target is detected
             tt = gt.X{k}(:,idx);                        % state of the targets
             o = gt.Ownship(:,k);                        % state of the ownship
@@ -30,8 +30,8 @@ switch nargin
         for k = 1:model.K
             % if any target is present
             if gt.N(k) > 0
-                Pd = compute_Pd(gt.X{k}, gt.Ownship(:,k), model);
-                %         Pd = model.pD;
+%                 Pd = compute_Pd(gt.X{k}, gt.Ownship(:,k), model);
+                Pd = model.pD;
                 idx = find(rand(gt.N(k),1) <= Pd );         % if a target is detected
                 tt = gt.X{k}(:,idx);                        % state of the targets
                 o = gt.Ownship(:,k);                        % state of the ownship

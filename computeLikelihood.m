@@ -5,12 +5,12 @@
 %%   Function inputs:
 %                   * zk    : actual measurements
 %                   * model : model parameters.
-%                   * zk_hat: measurement prediction from the predicted
-%                   particles.
-%
+%                   * xki   : predicted particles.
+%       Output: single target likelihood
 
-function gk_z = computeLikelihood(zk, zk_hat, model)
+function gk_z = computeLikelihood(zk, xki, model)
 
+zk_hat  = MeasFcn(xki, model, false);       % predicted measurements, without noise
 R       = model.R;                          % measurement covariance matrix
 invR    = R^(-1);                           % inverse of the measurement covariance (ignores the correlation)
 expo    = sum((invR*(repmat(zk,[1 size(zk_hat,2)])-zk_hat).^2),1);

@@ -29,11 +29,6 @@ switch SwitchModel
                         x(2,:); ...
                         x(3,:) + delT*x(4,:); ...
                         x(4,:) ];
-                %%  if the sensor platform moves
-                if ModelParams.IsMoving
-                    X = X - ModelParams.S(xOk, xOk_1);
-                end
-                
         end
     case 'CA'
         switch ProblemDim

@@ -11,9 +11,10 @@
 
 function Xki = SampleParticles(xk_1, model)
 
+%%  qk -> Markov density
 switch model.Sampling
     case 'bootstrap'
-        Xki = MarkovTransition(xk_1, model, true);       % predicted particles
+        Xki = MarkovDensity(model, xk_1);       % predicted particles
 end
 
 
