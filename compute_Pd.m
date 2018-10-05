@@ -18,6 +18,6 @@ else
     
     Pd = pd*exp(-esq/2);
     Pd = Pd(:);
-    Pd = model.pD;
+%     Pd = model.pD;
 
 end

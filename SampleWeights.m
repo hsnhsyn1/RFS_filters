@@ -12,7 +12,7 @@ function Wki = SampleWeights(xki, zk, model)
 
 switch model.Concept
     case 'single'
-        wki = computeLikelihood(zk, xki, model);	% likelihood value as the predicted weight
+        wki = computeLikelihood(zk, xki, model)+eps;	% likelihood value as the predicted weight
     case 'Ber'
 end
 

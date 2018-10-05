@@ -9,12 +9,17 @@
 %                       strategy
 
 
-function Xki = SampleParticles(xk_1, model)
+function Xki = SampleParticles(xk_1, model, varargin)
 
 %%  qk -> Markov density
 switch model.Sampling
     case 'bootstrap'
-        Xki = MarkovDensity(model, xk_1);       % predicted particles
+        if length(varargin) == 1
+            Uk = varargin{1};
+            Xki = MarkovDensity(model, xk_1, Uk);       % predicted particles
+        else
+            Xki = MarkovDensity(model, xk_1);
+        end
 end
 
 

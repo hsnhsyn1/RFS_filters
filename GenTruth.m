@@ -48,14 +48,14 @@ for tnum = 1:nbirths   % for each target
     for k = tbirth(tnum):min(tdeath(tnum),K)
         targetstate = MarkovTransition(targetstate, model, false);      % transition of the state
         xOk     = GTruth.Ownship(:,k);
-        if k >= 2
-            xOk_1   = GTruth.Ownship(:,k-1);
-        else
-            xOk_1   = zeros(size(xOk));
-        end
+%         if k >= 2
+%             xOk_1   = GTruth.Ownship(:,k-1);
+%         else
+%             xOk_1   = zeros(size(xOk));
+%         end
         %%  if the sensor platform moves
         if model.IsMoving
-            targetstate = targetstate - model.S(xOk, xOk_1);
+            targetstate = targetstate - xOk;%model.S(xOk, xOk_1);
         end
         GTruth.X{k} = [GTruth.X{k}, targetstate];
         GTruth.trackList{k} = [GTruth.trackList{k}, tnum];              % target index

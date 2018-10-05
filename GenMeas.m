@@ -34,9 +34,9 @@ switch nargin
                 Pd = model.pD;
                 idx = find(rand(gt.N(k),1) <= Pd );         % if a target is detected
                 tt = gt.X{k}(:,idx);                        % state of the targets
-                o = gt.Ownship(:,k);                        % state of the ownship
-                x = tt - o;                                 % relative target state
-                Measures.Z{k} = MeasFcn(x, model, true);    % generate measurement using appropriate model
+%                 o = gt.Ownship(:,k);                        % state of the ownship
+%                 x = tt - o;                                 % relative target state
+                Measures.Z{k} = MeasFcn(tt, model, true);    % generate measurement using appropriate model
             end
             Nc = poissrnd(model.Lambda);        % number of clutter points
             C = repmat(model.range_cz(:,1), [1 Nc]) + diag(model.range_cz*[-1;1])*rand(model.zDim, Nc);  % generate clutter points

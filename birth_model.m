@@ -8,21 +8,20 @@ function x_birth = birth_model(Zk, own, NumBirth, model)
 
 stdr = model.stdr;
 stds = model.stds;
-stdc = model.sigma_w;
+stdc = model.sigma_w(1);
 
-rmean = model.r_init;
 smean = 2;                     % m/s
-
-r = rmean + stdr*randn(1,NumBirth);
 s = smean + stds*randn(1,NumBirth);
 
 M = size(Zk,2);         % cardinality of the measurement set
 if M ~= 0
     for m = 1:M
-        cmean   = Zk(:,m)+pi;                          % add reference
+        cmean   = Zk(1,m) + pi;                          % add reference
+        rmean   = Zk(2,m);
         c(m,:)  = cmean + stdc*randn(1,NumBirth);
-        px(m,:) = r.*sin(Zk(:,m));
-        py(m,:) = r.*cos(Zk(:,m));
+        r(m,:)  = rmean + stdr*randn(1,NumBirth);
+        px(m,:) = r(m,:).*repmat(sin(Zk(1,m)),[1, NumBirth]);
+        py(m,:) = r(m,:).*repmat(cos(Zk(1,m)),[1, NumBirth]);
     end
     
     c   = sum(c,1)/M;
@@ -33,7 +32,7 @@ if M ~= 0
     
     x_birth = [ px; vx; py; vy];
 else
-    x_birth = initParticles(model.m_init, model.P_init, NumBirth, model);
+    x_birth = initParticles(model.m_init, model.P_init, own, NumBirth, model);
 end
 
 

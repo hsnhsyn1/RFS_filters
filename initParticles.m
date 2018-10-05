@@ -3,11 +3,11 @@
 
 %%  otoher initialization schemes can be implemented, i.e. Metropolis-Hastings algorithm.
 
-function x_init = initParticles(m, P, Np, model)
+function x_init = initParticles(m, Q, own, Np, model)
 
 x_init = zeros(model.xDim, Np);
 for i = 1:Np
-    x_init(:,i) = MarkovDensity(model, m, P);       % predicted particles
+    x_init(:,i) = MarkovDensity(model, m, Q, own);       % predicted particles
 end
 
 end
