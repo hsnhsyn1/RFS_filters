@@ -49,22 +49,22 @@ for k = 2:model.K
     zk = Measures.Z{k};                                 % current measurement
     own = GTruth.Ownship(:,k);                          % new ownship state
     Uk  = model.S(own, GTruth.Ownship(:,k-1));          % observer acceleration
-    [xk_new, q_new] = BernoulliPF(q_prev, Xki, zk_1, zk, own, Uk, model);       % filtering
-%     [xk_new, wk_new] = BootstrapPF(Xki, zk, model);
+%     [xk_new, q_new] = BernoulliPF(q_prev, Xki, zk_1, zk, own, Uk, model);       % filtering
+    [xk_new, wk_new] = BootstrapPF(Xki, zk, model);
     
     %% update variables for next cycle
     Xki     = xk_new;                                       
-    q_prev  = q_new;
+%     q_prev  = q_new;
     zk_1    = zk;
     
     
     %%  collect the estimation results
-    Result.q(k) = q_new;
-    if q_new > 0.8
+%     Result.q(k) = q_new;
+%     if q_new > 0.8
         Result.X{k} = xk_new*ones(model.N,1)/model.N;       % corresponds to sum(xk*wk)
         Result.N(k) = 1;                                    % 1 for single target
         Result.L{k} = [];                                   % empty for single target
-    end
+%     end
     %%  plot
 %     scatter(GTruth.X{k}(1,:),GTruth.X{k}(3,:),100, 'filled','bd'), hold on
 %     scatter(xk_new(1,:),xk_new(3,:),'.r')
@@ -72,7 +72,7 @@ for k = 2:model.K
 %     legend('Ground Truth', 'particles', 'Estimation')
 end
 
-figure, stem(Result.q)
+% figure, stem(Result.q)
 %% -----------------------------------------
 %%%%%       function tests
 a = [GTruth.X{:}];

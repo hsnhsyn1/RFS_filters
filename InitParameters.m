@@ -25,7 +25,7 @@ model.Resampling = 'standard';
 
 
 %%  Noise parameters
-model.sigma_w   = diag([2*pi/180; 10]);                 % measurement noise std (in rad)
+model.sigma_w   = diag([2*pi/180; 100]);                 % measurement noise std (in rad)
 model.sigma_v   = .1;                              % process noise intensity
 model.Qk        = model.sigma_v*kron(eye(model.PDim),[(model.dT^3)/3 (model.dT^2)/2; (model.dT^2)/2 model.dT]);
 model.R         = model.sigma_w*model.sigma_w';     % mesurement error covariance
@@ -59,10 +59,10 @@ model.q0        = 0.99;            % initial target existence probability
 model.MaxRange  = 10e3;
 
 %%  Clutter parameters
-model.range_cz  = [-pi/2, pi/2; 0 .2e3];    % clutter range
+model.range_cz  = [-pi/2, pi/2; 0 2e3];    % clutter range
 model.pdf_cz    = 1/prod(model.range_cz(:,2) - model.range_cz(:,1)); % clutter spatial distribution is uniform
-model.Lambda    = 5;            % average clutter (will be varied)
-model.pD        = .9;          % probability of detection (will be varied)-state dependent parameterization
+model.Lambda    = 0;            % average clutter (will be varied)
+model.pD        = 1;          % probability of detection (will be varied)-state dependent parameterization
 
 %%  Sensor control parameters
 model.OwnControl = false;       % is sensor control is present, for observer trajectory generation
