@@ -5,24 +5,29 @@
 clc; clearvars; close all;
 
 % rng('default')
+for mc = 1:100
 
 model       = InitParameters;               % initialize all parameters.
 GTruth      = GenTruth(model);              % generate ground truth target and observer trajectory
 Measures    = GenMeas(GTruth, model);       % offline data generation
 
-%%  output variable initialization
-Result.X = cell(model.K, 1);            % estimated state variable
-Result.N = zeros(model.K, 1);           % estimated number of targets
-Result.L = cell(model.K, 1);            % estimated target labels
-
 %%  particle, weight, state initialization
-zk_1    = Measures.Z{1};   % first measurement
-q_prev  = .1;                     % initial prob. of existence
+zk_1    = Measures.Z{1};                % first measurement
+q_prev  = .1;                           % initial prob. of existence
 Wki     = ones(model.N,1)/model.N;      % initial, uniform weights
-model.m_init  = [7800; 0; 100; 0];
-model.P_init  = diag([100 2 100 2]').^2;
+model.m_init  = [zk_1(2)*sin(zk_1(1)) 0 zk_1(2)*cos(zk_1(1)) 0]';
+model.P_init  = diag([10000 4 10000 4]').^2;
 own = GTruth.Ownship(:,1);
 Xki = initParticles(model.m_init, model.P_init, own, model.N, model);
+
+
+%%  output variable initialization
+Result(mc).X = cell(model.K, 1);            % estimated state variable
+Result(mc).N = zeros(model.K, 1);           % estimated number of targets
+Result(mc).L = cell(model.K, 1);            % estimated target labels
+
+Result(mc).X{1} = Xki*Wki;                  % initial target state
+Result(mc).P{1} = Xki*Xki'./model.N;        % initial state covariance
 
 % % initial target state
 % Xo_k   = [0; 2.57*sin(140*pi/180); 0; 2.57*cos(140*pi/180)];       % 5 knots, 140 deg
@@ -43,9 +48,9 @@ Xki = initParticles(model.m_init, model.P_init, own, model.N, model);
 %     [Measures, GTruth] = OnlineData(Measures, GTruth, Ucontrol, model, k);
 % end
 
-figure,
+% figure,
 for k = 2:model.K
-    refresh;
+%     refresh;
     zk = Measures.Z{k};                                 % current measurement
     own = GTruth.Ownship(:,k);                          % new ownship state
     Uk  = model.S(own, GTruth.Ownship(:,k-1));          % observer acceleration
@@ -57,37 +62,38 @@ for k = 2:model.K
 %     q_prev  = q_new;
     zk_1    = zk;
     
-    
     %%  collect the estimation results
+    P   = xk_new*xk_new'./(model.N-1);                          % estimation covariance
 %     Result.q(k) = q_new;
 %     if q_new > 0.8
-        Result.X{k} = xk_new*ones(model.N,1)/model.N;       % corresponds to sum(xk*wk)
-        Result.N(k) = 1;                                    % 1 for single target
-        Result.L{k} = [];                                   % empty for single target
+        Result(mc).X{k} = xk_new*ones(model.N,1)/model.N;       % corresponds to sum(xk*wk)
+        Result(mc).N(k) = 1;                                    % 1 for single target
+        Result(mc).L{k} = [];                                   % empty for single target
+        Result(mc).P{k} = P;                                    % estimated state covariance
 %     end
+    error = GTruth.X{k} - Result(mc).X{k};
+    Result(mc).NEES(k) = error'*pinv(P)*error;
     %%  plot
 %     scatter(GTruth.X{k}(1,:),GTruth.X{k}(3,:),100, 'filled','bd'), hold on
 %     scatter(xk_new(1,:),xk_new(3,:),'.r')
 %     scatter(Result.X{k}(1,:),Result.X{k}(3,:),100,'filled','ok')
 %     legend('Ground Truth', 'particles', 'Estimation')
+end     % simulation
+
+
+end     % monte carlo run
+
+for mc = 1:100
+    NEES(mc,:) = Result(mc).NEES(:);
 end
+ANEES       = mean(NEES,1);                       % average NEES
+stdOfNEES   = std(NEES,1);
+figure, plot(ANEES), title('ANEES of 100 Monte Carlo Runs')
 
-% figure, stem(Result.q)
-%% -----------------------------------------
-%%%%%       function tests
-a = [GTruth.X{:}];
-figure, plot(a(1,:), a(3,:),'.r'), hold on
-plot(GTruth.Ownship(1,:),GTruth.Ownship(3,:),'.b')
+hold on
+plot(ones(1,model.K),'--k')
 
-b = [Result.X{:}];
-plot(b(1,:),b(3,:),'k-')
 
-% for i = 1:model.K
-%     own = GTruth.Ownship(:,k);
-%     zz = Result.X{i};
-%     if ~isempty(zz)
-% %         zz = zz+own;
-%         plot(zz(1),zz(3),'-k'), hold on
-%     end
-% end
+
+
 
