@@ -49,7 +49,7 @@ Result(mc).P{1} = Xki*Xki'./model.N;        % initial state covariance
 % end
 
 % figure,
-for k = 2:model.K
+for k = 2:model.K       % total number of scans
 %     refresh;
     zk = Measures.Z{k};                                 % current measurement
     own = GTruth.Ownship(:,k);                          % new ownship state
