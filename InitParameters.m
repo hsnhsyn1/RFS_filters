@@ -38,7 +38,7 @@ model.bt        = model.sigma_vel*[(model.dT^2)/2; model.dT];
 model.B2        = [kron([eye(2), zeros(2,1)],model.bt); 0 0 model.w_std*model.dT];
 
 %%  Particle Filter parameters
-model.N         = 10000;         % number of particles
+model.N         = 1000;         % number of particles
 model.B         = 3000;         % number of birth particles
 
 %%  Bernoulli (RFS) parameters
