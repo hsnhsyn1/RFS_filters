@@ -5,7 +5,7 @@
 clc; clearvars; close all;
 
 % rng('default')
-for mc = 1:100
+for mc = 1:1
 
 model       = InitParameters;               % initialize all parameters.
 GTruth      = GenTruth(model);              % generate ground truth target and observer trajectory
@@ -74,24 +74,25 @@ for k = 2:model.K
     error = GTruth.X{k} - Result(mc).X{k};
     Result(mc).NEES(k) = error'*pinv(P)*error;
     %%  plot
-%     scatter(GTruth.X{k}(1,:),GTruth.X{k}(3,:),100, 'filled','bd'), hold on
-%     scatter(xk_new(1,:),xk_new(3,:),'.r')
-%     scatter(Result.X{k}(1,:),Result.X{k}(3,:),100,'filled','ok')
-%     legend('Ground Truth', 'particles', 'Estimation')
+    scatter(GTruth.X{k}(1,:),GTruth.X{k}(3,:),100, 'filled','bd')   % ground truth position of the target
+    hold on
+%     scatter(xk_new(1,:),xk_new(3,:),'.r')                           % scatter particles on the ground truth
+    scatter(Result.X{k}(1,:),Result.X{k}(3,:),100,'filled','ok')    % estimation result
+    legend('Ground Truth', 'particles', 'Estimation')
 end     % simulation
 
 
 end     % monte carlo run
 
-for mc = 1:100
-    NEES(mc,:) = Result(mc).NEES(:);
-end
-ANEES       = mean(NEES,1);                       % average NEES
-stdOfNEES   = std(NEES,1);
-figure, plot(ANEES), title('ANEES of 100 Monte Carlo Runs')
-
-hold on
-plot(ones(1,model.K),'--k')
+% for mc = 1:100
+%     NEES(mc,:) = Result(mc).NEES(:);
+% end
+% ANEES       = mean(NEES,1);                       % average NEES
+% stdOfNEES   = std(NEES,1);
+% figure, plot(ANEES), title('ANEES of 100 Monte Carlo Runs')
+% 
+% hold on
+% plot(ones(1,model.K),'--k')
 
 
 
