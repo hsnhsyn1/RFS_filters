@@ -5,7 +5,7 @@
 clc; clearvars; close all;
 
 % rng('default')
-for mc = 1:1
+for mc = 1:1        % monte carlo simulations
 
 model       = InitParameters;               % initialize all parameters.
 GTruth      = GenTruth(model);              % generate ground truth target and observer trajectory
