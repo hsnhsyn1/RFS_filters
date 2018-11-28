@@ -20,7 +20,6 @@ model.P_init  = diag([10000 4 10000 4]').^2;
 own = GTruth.Ownship(:,1);
 Xki = initParticles(model.m_init, model.P_init, own, model.N, model);
 
-
 %%  output variable initialization
 Result(mc).X = cell(model.K, 1);            % estimated state variable
 Result(mc).N = zeros(model.K, 1);           % estimated number of targets
@@ -74,10 +73,10 @@ for k = 2:model.K       % total number of scans
     error = GTruth.X{k} - Result(mc).X{k};
     Result(mc).NEES(k) = error'*pinv(P)*error;
     %%  plot
-    scatter(GTruth.X{k}(1,:),GTruth.X{k}(3,:),100, 'filled','bd')   % ground truth position of the target
+    scatter(GTruth.X{k}(1,:),GTruth.X{k}(3,:),'filled','bd')   % ground truth position of the target
     hold on
 %     scatter(xk_new(1,:),xk_new(3,:),'.r')                           % scatter particles on the ground truth
-    scatter(Result.X{k}(1,:),Result.X{k}(3,:),100,'filled','ok')    % estimation result
+    scatter(Result.X{k}(1,:),Result.X{k}(3,:),'filled','ok')    % estimation result
     legend('Ground Truth', 'particles', 'Estimation')
 end     % simulation
 
